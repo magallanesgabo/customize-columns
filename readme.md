@@ -12,33 +12,57 @@ This function simplifies the use of hooks like `manage_{$post_type}_posts_column
 
 ## **How to Use `customize_columns()`**
 
-### **Step 1: Define Columns**
+### **Step 1: Array Structure and Variables**
 
-Create an associative array where each key represents the column ID, and the value is a subarray defining the column's characteristics.
+To define the structure of your columns, use an associative array where each key represents the column ID, and the value is an array defining the column's characteristics. Note: Use `array()` for consistency in WordPress coding standards.
 
 #### Example:
 
 ```php
-$postname_columns = (
+$postname_columns = array(
     'post_id' => array(     // This is the key of the new column 'post_id'
         'label' => 'ID',
         'content_callback' => function ($post_id) {
             echo $post_id;
-            # Example: Retrieve a custom field value or any additional data
+            // Example: Retrieve a custom field value or any additional data
             // echo get_post_meta($post_id, 'field_name', true);
             // echo get_field('field_name', $post_id);
         },
         'sortable' => true, // Make the column sortable
         'width' => '20px' // Adjust column width
-        #'visible' => false, // Visible is true by default
+        //'visible' => false, // Visible is true by default
     ),
 );
-
 ```
 
 ---
 
-### **Step 2: Call `customize_columns()`**
+### **Step 2: Add a Custom Column Example**
+
+Below is an example of defining a custom column for `post_id`, which displays the unique ID of the post. This column is sortable and placed in the desired order within the columns array.
+
+#### Example:
+
+```php
+$postname_columns = array(
+    'post_id' => array(     // This is the key of the new column 'post_id'
+        'label' => 'ID',
+        'content_callback' => function ($post_id) {
+            echo $post_id;
+            // Example: Retrieve a custom field value or any additional data
+            // echo get_post_meta($post_id, 'field_name', true);
+            // echo get_field('field_name', $post_id);
+        },
+        'sortable' => true, // Make the column sortable
+        'width' => '20px' // Adjust column width
+        //'visible' => false, // Visible is true by default
+    ),
+);
+```
+
+---
+
+### **Step 3: Call `customize_columns()`**
 
 After defining the columns array, use the `customize_columns()` function. It takes two parameters:
 
@@ -48,14 +72,14 @@ After defining the columns array, use the `customize_columns()` function. It tak
 #### Example:
 
 ```php
-customize_columns('cpt-name', $columns);
+customize_columns('cpt-name', $postname_columns);
 ```
 
 ---
 
-### **Step 3: Complete Example**
+### **Step 4: Complete Example**
 
-This is the final example of how it would actually be used where you are modifying the columns for the CPT page, and you are adding a new column with the key or column id 'post_id' and you are painting the post id and adding the rest of the default columns if you want to control the order of all the columns.
+This is the final example of how it would actually be used. Here, you modify the columns for the CPT `page`, add a new column with the key or column ID `post_id`, and include the default columns. This ensures full control over the order of all columns.
 
 ```php
 $page_columns = array(
@@ -98,9 +122,8 @@ customize_columns('page', $page_columns);
 ```
 
 ---
----
 
-### **Step 4: Verify Changes**
+### **Step 5: Verify Changes**
 
 Ensure that the columns appear in the admin list for the specified CPT or taxonomy. If you used `visible => false` or if the column is managed by another plugin, check that the applied modifications (order, labels, width) are as expected.
 
@@ -119,19 +142,24 @@ Ensure that the columns appear in the admin list for the specified CPT or taxono
 
 ## **How to Create a New Column**
 
-To add a new column, simply define a new element in the array with the desired characteristics. The order of the columns in the admin list will follow the order in the array.
+To create a new column, define a unique key (column ID) for the column. Then, specify the `label`, `content_callback`, and other optional settings (e.g., `sortable`, `width`, `visible`). Finally, insert the column into the array in the desired order.
 
 #### Example:
 
 ```php
-$columns('new_column') = (
-    'label' => 'New Column',
-    'content_callback' => function($post_id) {
-        echo 'This is a new column!';
-    },
-    'sortable' => false,
-    'visible' => true,
-    'width' => '150px'
+$postname_columns = array(
+    'post_id' => array(     // This is the key of the new column 'post_id'
+        'label' => 'ID',
+        'content_callback' => function ($post_id) {
+            echo $post_id;
+            // Example: Retrieve a custom field value or any additional data
+            // echo get_post_meta($post_id, 'field_name', true);
+            // echo get_field('field_name', $post_id);
+        },
+        'sortable' => true, // Make the column sortable
+        'width' => '20px' // Adjust column width
+        //'visible' => false, // Visible is true by default
+    ),
 );
 ```
 
@@ -139,19 +167,21 @@ $columns('new_column') = (
 
 ## **How to Modify Column Order**
 
-The order of the columns is determined by their position in the array. To reorder columns, adjust their position in the array.
+The order of the columns is determined by their position in the array. To reorder columns, adjust their position in the array. Columns will render in the same order as defined.
+
+If you want full control of all columns, you need to define their IDs (CSS selectors of the columns) and place them in the desired order. Use their unique keys to ensure they can be modified.
 
 #### Example:
 
 ```php
-$columns = (
-    'title' => (
+$columns = array(
+    'title' => array(
         'label' => 'Title',
     ),
-    'my_custom_column' => (
+    'my_custom_column' => array(
         'label' => 'Custom',
     ),
-    'date' => (
+    'date' => array(
         'label' => 'Date',
     )
 );
